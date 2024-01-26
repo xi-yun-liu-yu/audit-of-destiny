@@ -6,8 +6,9 @@ namespace News_Event
     // 自定义事件，通过载入EventStream来执行
     public class Event
     {
-        private String funName{ get;  set; }// 初始执行事件
-
+        private String funName{ get;  set; }
+        
+        // 初始执行事件
         public Event(string funName)
         {
             this.funName = funName;
