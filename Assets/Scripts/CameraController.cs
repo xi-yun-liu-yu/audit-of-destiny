@@ -27,16 +27,16 @@ public class CameraController : MonoBehaviour
         {
             velocity = velocity + (acceleration * Time.deltaTime);
         }
-        else
-        {
-            b = !b;
-            velocity = 0f;
-        }
-
+        
         if (camera != null)
         {
             camera.transform.position =
                 Vector3.MoveTowards(camera.transform.position, aimVector3, velocity * Time.deltaTime);
+        }
+        if( camera.transform.position==aimVector3)
+        {
+            b = !b;
+            velocity = 0f;
         }
 
         if (GameObject.Find("UI").GetComponent<Canvas>().worldCamera == null)

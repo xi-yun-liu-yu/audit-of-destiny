@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\News&amp;Event\EventStream.cs" />
      <Compile Include="Assets\Scripts\System_Modules\PersistentSingleton.cs" />
      <Compile Include="Assets\Scripts\System_Modules\Options.cs" />
+     <Compile Include="Assets\Scripts\News&amp;Event\InformationController.cs" />
      <Compile Include="Assets\Scripts\News&amp;Event\BalanceOfPower.cs" />
      <Compile Include="Assets\Scripts\News&amp;Event\NewsPaperController.cs" />
      <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
