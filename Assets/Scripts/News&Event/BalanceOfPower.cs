@@ -46,7 +46,7 @@ namespace News_Event
         }
         
         // 重绘权力平衡环形饼图
-        public void ReBlance()
+        public void RenewBalance()
         {
             R.GetComponent<Annulus>().fillAmount = 1;
             C.GetComponent<Annulus>().fillAmount = 1 - R_Value;

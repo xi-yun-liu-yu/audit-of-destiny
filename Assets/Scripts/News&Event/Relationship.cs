@@ -55,7 +55,7 @@ public class Relationship : MonoBehaviour
     }
     
     // 重绘好感度条状图
-    public void ReRelationship()
+    public void RenewRelationship()
     {
         R.GetComponent<Slider>().value = R_Value;
         C.GetComponent<Slider>().value = C_Value;
