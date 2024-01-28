@@ -33,6 +33,7 @@ public class Relationship : MonoBehaviour
     private Text D_Information;
     
     private bool _dflag;//判断D是否启用
+    public string factionTag { get; set; }
         
     public bool GetDflag() => _dflag;
 

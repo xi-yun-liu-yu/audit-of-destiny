@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    GameObject camera;
+    [SerializeField] GameObject camera;
     [SerializeField] private float max_velocity;
     [SerializeField] private float velocity;
     [SerializeField] private float max_angular_velocity;

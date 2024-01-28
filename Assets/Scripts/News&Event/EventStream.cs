@@ -24,11 +24,8 @@ namespace News_Event
         // 测试用方法3
         public void Run()
         {
-            if (events.Count>0)
-            {
-                events[0].Run("Event_3",new object[]{"R",0.05f});
-                events.RemoveAt(0);
-            }
+            events.Add(new Event("Event_End_R"));
+            events[0].Run();
         }
     }
 }
