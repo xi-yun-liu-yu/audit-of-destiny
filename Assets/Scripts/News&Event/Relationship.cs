@@ -32,12 +32,13 @@ public class Relationship : MonoBehaviour
     private Text C_Information;
     private Text D_Information;
     
-    private bool _dflag;//判断D是否启用
+    private bool _dflag1;//判断D是否启用
+    private bool _dflag2{ get; set; }//判断毁灭派是否亮明身份
     public string factionTag { get; set; }
         
-    public bool GetDflag() => _dflag;
+    public bool GetDflag() => _dflag1;
 
-    public void SetDflag(bool value) => _dflag = value;
+    public void SetDflag(bool value) => _dflag1 = value;
 
     private bool _rIsLose{ get;  set; }
     private bool _cIsLose{ get;  set; }
@@ -95,4 +96,44 @@ public class Relationship : MonoBehaviour
                 break;
         }
     }
+    
+    /// <summary>
+    /// 快速取值、赋值函数
+    /// </summary>
+    /// <param name="parameters">对象列表，依次是R_Value，C_Value，D_Value</param>
+    public void RenewFloutDate(object[] parameters)
+    {
+        R_Value = (int)parameters[0];
+        C_Value = (int)parameters[1];
+        D_Value = (int)parameters[2];
+    }
+    /// <summary>
+    /// 快速取值、赋值函数
+    /// </summary>
+    /// <param name="parameters">_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose</param>
+    public void RenewBoolDate(object[] parameters)
+    {
+        _dflag1 = (bool)parameters[0];
+        _dflag2 = (bool)parameters[1];
+        _rIsLose = (bool)parameters[2];
+        _cIsLose = (bool)parameters[3];
+        _dIsLose = (bool)parameters[4];
+    }
+    /// <summary>
+    /// 快速取值、赋值函数
+    /// </summary>
+    /// <param name="parameters">对象列表，依次是R_Value，C_Value，D_Value</param>
+    public object[] GetFloutDate()
+    {
+        return new object[]{R_Value,C_Value,D_Value};
+    }
+    /// <summary>
+    /// 快速取值、赋值函数
+    /// </summary>
+    /// <param name="parameters">_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose</param>
+    public object[] GetBoolDate()
+    {
+        return new object[]{_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose};
+    }
+
 }

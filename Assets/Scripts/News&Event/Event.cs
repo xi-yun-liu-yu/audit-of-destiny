@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace News_Event
@@ -14,9 +16,13 @@ namespace News_Event
             this.funName = funName;
         }
 
-        // 执行函数
-        // funName 方法名
-        // parameters 参数
+        /// <summary>
+        /// 执行函数
+        /// </summary>
+        /// <param name="funName">方法名</param>
+        /// <param name="parameters">参数列表</param>
+        /// <exception cref="NullReferenceException">方法名不存在</exception>
+
         public void Run(String funName,object[] parameters=null)
         {
             var type = typeof(Event);
@@ -28,6 +34,12 @@ namespace News_Event
             method.Invoke(obj, parameters);
         }
         
+        /// <summary>
+        /// 执行函数
+        /// </summary>
+        /// <param name="funName">方法名</param>
+        /// <param name="parameters">参数列表</param>
+        /// <exception cref="NullReferenceException">方法名不存在</exception>
         public void Run(object[] parameters = null)
         {
             var type = typeof(Event);
@@ -41,15 +53,41 @@ namespace News_Event
         }
         
         // 自定义函数区域
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 自定义函数区域
         
-        // 周期性数据更新
+        // 周期性、固定性函数区域
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        // 周期性、固定性函数区域
+        
+        /// <summary>
+        /// 周期性保存数据到player中
+        /// </summary>
         public void Save()
         {
-            
+            Player.Player.Instance.RenewB_FloutDate(BalanceOfPower.Instance.GetFloutDate());
+            Player.Player.Instance.RenewR_FloutDate(Relationship.Instance.GetFloutDate());
+            Player.Player.Instance.RenewBoolDate(BalanceOfPower.Instance.GetBoolDate());
+            Player.Player.Instance.money = Money.Instance.saving;
+            Player.Player.Instance.factionTag = Relationship.Instance.factionTag;
         }
         
-        //结局 事件
-        //每个周期结束之后均应判定一次结局事件
+        /// <summary>
+        /// 周期性保存从player中读取
+        /// </summary>
+        public void Load()
+        {
+            BalanceOfPower.Instance.RenewFloutDate(Player.Player.Instance.GetB_FloutDate());
+            Relationship.Instance.RenewFloutDate(Player.Player.Instance.GetR_FloutDate());
+            BalanceOfPower.Instance.RenewFloutDate(Player.Player.Instance.GetBoolDate());
+            Relationship.Instance.RenewFloutDate(Player.Player.Instance.GetBoolDate());
+            Money.Instance.saving = Player.Player.Instance.money;
+            Relationship.Instance.factionTag = Player.Player.Instance.factionTag;
+        }
+        /// <summary>
+        /// 结局 事件
+        /// 每个周期结束之后均应判定一次结局事件
+        /// </summary>
         public void Event_End()
         {
             switch (Relationship.Instance.factionTag)
@@ -99,23 +137,76 @@ namespace News_Event
         {
             NewsListConroller.Instance.AddNews("平平淡淡打工人","会在长久的政治斗争之后，各派直接达成了微妙的平衡，使得哈苏特公会得以平稳的运行下去。由于在这场斗争中你并未发挥什么作用，你很快就被边缘化，重新回到档案室管理文件，最后在一次裁员中被开除。身无所长的你找不到工作，一家人流落街头冻饿而死。");
         }
-        // 大清洗 事件
+
+        /// <summary>
+        /// 入会成员证件作假
+        /// </summary>
         public void Event_1()
+        {
+            foreach (var npc in EventStream.Instance.ErrorNpcs)
+            {
+                
+            }
+        }
+
+        /// <summary>
+        /// 每周工作报告
+        /// </summary>
+        public void Event_2()
+        {
+            int Errors = 0;//本周存在的有风险npc暴雷的数量
+            int Rights = 0;//本周期拒绝的证件正确的人的数量
+            foreach (var variabErrorNpc in EventStream.Instance.ErrorNpcs)
+            {
+                // 未写完，等待NPC
+                Errors += 1;
+            }
+            foreach (var variabRightNpc in EventStream.Instance.RightNpcs)
+            {
+                // 未写完，等待NPC
+                Rights += 1;
+            }
+
+            string str ="";
+            if (Errors>0)
+            {
+                str += "本周发生了" + Errors + "起事故，经组织查明是由不称职者混入了组织，有人会为此付出代价的。";
+                str += "/n";
+                Money.Instance.saving -= (Errors * 200);
+            }
+
+            if (Rights>0)
+            {
+                str += "经小道消息，有" + Rights + "个人跑到了敌对公会，审计人员要对人才流失负责！";
+                Money.Instance.saving -= (Errors * 100);
+            }
+            
+            NewsListConroller.Instance.AddNews("工作报告",str);
+
+        }
+        
+        /// <summary>
+        /// 大清洗事件
+        /// </summary>
+        public void Event_3()
         {
             BalanceOfPower.Instance.SetDifference("C",-(BalanceOfPower.Instance.C_Value/3));
             BalanceOfPower.Instance.SetDflag1(true);
+            BalanceOfPower.Instance.SetValue(BalanceOfPower.Instance.R_Value*0.75f,BalanceOfPower.Instance.C_Value,BalanceOfPower.Instance.R_Value*0.25f);
+            NewsListConroller.Instance.AddNews("大清洗","我去，是大清洗，太哈人了");
+        }
+
+        /// <summary>
+        /// 阴谋分裂公会的内奸？（毁灭派显身事件）
+        /// </summary>
+        public void Event_4()
+        {
+            if (BalanceOfPower.Instance.D_Value>=50)
+            {
+                BalanceOfPower.Instance.SetDflag2(true);
+                NewsListConroller.Instance.AddNews("阴谋分裂公会的内奸？","啊，有内鬼？！");
+            }
         }
         
-        // 测试事件
-        public void Event_2()
-        {
-            BalanceOfPower.Instance.SetDifference("R",0.05f);
-        }
-        
-        // 测试事件
-        public void Event_3(String s,float f)
-        {
-            BalanceOfPower.Instance.SetDifference(s,f);
-        }
     }
 }
