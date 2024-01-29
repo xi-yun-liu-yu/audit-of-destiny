@@ -2557,7 +2557,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1074503472503424774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3920,6 +3920,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3634707170245536443}
+  - component: {fileID: 8958352321711817290}
   m_Layer: 0
   m_Name: Money
   m_TagString: Untagged
@@ -3948,6 +3949,18 @@ RectTransform:
   m_AnchoredPosition: {x: -605, y: -276}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8958352321711817290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8851716784624493508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168faf4a7101ccb47af69ac417c16303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9001755607894039415
 GameObject:
   m_ObjectHideFlags: 0

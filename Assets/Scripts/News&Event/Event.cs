@@ -86,13 +86,55 @@ namespace News_Event
         }
 
         /// <summary>
-        /// 对npc施加影响后额外npc带来的其他影响
+        /// 最终选择勒索NPC
         /// </summary>
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
         public void Event_NPC_2(NPC.NPC npc)
         {
-            
+            if (npc.getWillPay())
+            {
+                Money.Instance.saving += 200;
+            }
+
+            if (npc.getWillReport())
+            {
+                Relationship.Instance.SetDifference(""+npc.getParty(),-npc.getPartyPowerWeight()*5);
+                EventStream.Instance.turnviolation += 2;
+                Player.Player.Instance.violation += 2;
+            }
+            EventStream.Instance.ErrorNpcs.Add(npc);// 增加一个会暴雷的npc
         }
+        
+        
+        /// <summary>
+        ///  错误拒绝了NPC
+        /// </summary>
+        public void Event_NPC_3(NPC.NPC npc)
+        {
+            if (!npc.getIsCompliant() || npc.getIsPassed()) return;
+            switch (""+npc.getParty())
+            {
+                case "R":
+                    Relationship.Instance.SetDifference("R",-6);
+                    Relationship.Instance.SetDifference("C",3);
+                    Relationship.Instance.SetDifference("D",3);
+                    break;
+                case "C":
+                    Relationship.Instance.SetDifference("C",-6);
+                    Relationship.Instance.SetDifference("R",3);
+                    Relationship.Instance.SetDifference("D",3);
+                    break;
+                case "D":
+                    Relationship.Instance.SetDifference("D",-6);
+                    Relationship.Instance.SetDifference("C",3);
+                    Relationship.Instance.SetDifference("R",3);
+                    break;
+            }
+
+            EventStream.Instance.turnviolation++;
+            Player.Player.Instance.violation++;
+        }
+        
         
         // 周期性、固定性函数区域
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +176,8 @@ namespace News_Event
         {
             BalanceOfPower.Instance.RenewFloutDate(Player.Player.Instance.GetB_FloutDate());
             Relationship.Instance.RenewFloutDate(Player.Player.Instance.GetR_FloutDate());
-            BalanceOfPower.Instance.RenewFloutDate(Player.Player.Instance.GetBoolDate());
-            Relationship.Instance.RenewFloutDate(Player.Player.Instance.GetBoolDate());
+            BalanceOfPower.Instance.RenewBoolDate(Player.Player.Instance.GetBoolDate());
+            Relationship.Instance.RenewBoolDate(Player.Player.Instance.GetBoolDate());
             Money.Instance.saving = Player.Player.Instance.money;
             Relationship.Instance.factionTag = Player.Player.Instance.factionTag;
         }
@@ -166,6 +208,7 @@ namespace News_Event
                     }
                     break;
             }
+            Event_5();
         }
         
         // 激进派结局事件
@@ -213,13 +256,27 @@ namespace News_Event
                 int r = Random.Range(0, 9);
                 if (r==0)
                 {
-                    BalanceOfPower.Instance.SetDifference((""+variabErrorNpc.getParty()),variabErrorNpc.getPartyPowerWeight());
+                    BalanceOfPower.Instance.SetDifference((""+variabErrorNpc.getParty()),1.5f*variabErrorNpc.getPartyPowerWeight());
                     Errors += 1;
+                    switch (""+variabErrorNpc.getParty())
+                    {
+                        case "R":
+                            Relationship.Instance.SetDifference("C",-10);
+                            Relationship.Instance.SetDifference("D",-10);
+                            break;
+                        case "C":
+                            Relationship.Instance.SetDifference("R",-10);
+                            Relationship.Instance.SetDifference("D",-10);
+                            break;
+                        case "D":
+                            Relationship.Instance.SetDifference("C",-10);
+                            Relationship.Instance.SetDifference("R",-10);
+                            break;
+                    }
                 }
             }
             foreach (var variabRightNpc in EventStream.Instance.RightNpcs)
             {
-                // 未写完，等待NPC
                 Rights += 1;
             }
 
@@ -257,17 +314,79 @@ namespace News_Event
         /// </summary>
         public void Event_4()
         {
-            if (BalanceOfPower.Instance.D_Value>=50)
+            if (BalanceOfPower.Instance.D_Value>=50&&!BalanceOfPower.Instance.GetDflag2())
             {
                 BalanceOfPower.Instance.SetDflag2(true);
                 NewsListConroller.Instance.AddNews("阴谋分裂公会的内奸？","啊，有内鬼？！");
             }
         }
         
+
+        /// <summary>
+        /// 违规开除检定/破产失败
+        /// </summary>
+        public void Event_5()
+        {
+            if (EventStream.Instance.turnviolation>=5)
+            {
+                NewsListConroller.Instance.AddNews("你被开除了","这段时间内你的工作纰漏很多，滚吧");
+            }
+
+            if (Player.Player.Instance.violation>=20)
+            {
+                NewsListConroller.Instance.AddNews("你被开除了","长期以来你的工作纰漏很多，滚吧");
+            }
+
+            if (Player.Player.Instance.money<=0)
+            {
+                NewsListConroller.Instance.AddNews("你破产了","资不抵债，成功负债上班");
+            }
+        }
         
         // 随机事件区
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 随机事件区
+
+
+        public void Event_Random()
+        {
+            var max = !BalanceOfPower.Instance.GetDflag2() ? 7 : 9;
+            var r = Random.Range(0, max);
+            switch (r)
+            {
+                // 0-3 激进派事件
+                case 0:
+                    Event_R_1();
+                    break;
+                case 1:
+                    Event_R_2();
+                    break;
+                case 2:
+                    Event_R_3();
+                    break;
+                case 3:
+                    Event_R_4();
+                    break;
+                case 4:
+                    Event_C_1();
+                    break;
+                case 5:
+                    Event_C_2();
+                    break;
+                case 6:
+                    Event_C_3();
+                    break;
+                case 7:
+                    Event_C_2();
+                    break;
+                case 8:
+                    Event_D_1();
+                    break;
+                case 9:
+                    Event_D_2();
+                    break;
+            }
+        }
         
         // 激进派事件区域
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -402,6 +521,21 @@ namespace News_Event
                 BalanceOfPower.Instance.SetDifference("D",0.2f);
             }
             
+        }
+
+        /// <summary>
+        /// 可疑人员被捕获
+        /// </summary>
+        public void Event_D_2()
+        {
+            int r = Random.Range(0, 9);
+            if (r<=5)
+            {
+                BalanceOfPower.Instance.SetDifference("D",-0.1f);
+            }else
+            {
+                BalanceOfPower.Instance.SetDifference("D",-0.2f);
+            }
         }
         
     }

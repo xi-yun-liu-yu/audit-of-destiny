@@ -193,16 +193,19 @@ namespace News_Event
             if (R_Value <= 0)
             {
                 _rIsLose = true;
+                R_Value = 0;
             }
 
             if (C_Value <= 0)
             {
                 _dIsLose = true;
+                C_Value = 0;
             }
 
             if (D_Value <= 0)
             {
                 _dIsLose = true;
+                D_Value = 0;
             }
             
         }

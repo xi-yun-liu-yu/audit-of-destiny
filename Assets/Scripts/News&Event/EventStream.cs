@@ -11,8 +11,9 @@ namespace News_Event
         public List<Event> events=new List<Event>();
         public List<NPC.NPC> ErrorNpcs = new List<NPC.NPC>();//存在的有风险npc暴雷的数量
         public List<NPC.NPC> RightNpcs = new List<NPC.NPC>();//本周期拒绝的证件正确的人的数量
-        public int Turn;//周期数
+        public int Turn=0;//周期数
         public int index;
+        public int turnviolation = 0;//单周期违规次数
         
         public static EventStream Instance{ get; private set; }
 
@@ -21,36 +22,47 @@ namespace News_Event
         /// </summary>
         public void NewTrun()
         {
+            turnviolation = 0;
             npcs.Clear();
             npcs.Add(new NPC.NPC());//随机添加一定数量的NPC
             events.Clear();
             RightNpcs.Clear();
-            events.Add(new Event("Event_GenerateNewspaper"));
+            Event e = new Event("Event_GenerateNewspaper");//创建一张空白的报纸等待数据
+            e.Run();
             events.Add(new Event("Load"));
+            //等待npc事件
+            events.Add(new Event("Event_2"));
+            if (Turn==4||BalanceOfPower.Instance.R_Value<=0.3f)
+            {
+                events.Add(new Event("Event_3"));//载入大清洗事件
+            }
+            events.Add(new Event("Event_4"));
+            events.Add(new Event("Event_Random"));
+            events.Add(new Event("Event_End"));
+            events.Add(new Event("Save"));
+            
         }
 
         private void Awake()
         {
             Instance = this;
         }
-
-        // 测试用方法1
-        public void AddEvent_2()
-        {
-            events.Add(new Event("Event_2"));
-        }
         
-        // 测试用方法2
-        public void AddEvent_1()
+        
+        // 开始游戏
+        public void FirstGame()
         {
-            events.Add(new Event("Event_1"));
+            events.Add(new Event("Event_FirstGame"));
+            events[0].Run();
         }
         
         // 测试用方法3
         public void Run()
         {
-            events.Add(new Event("Event_FirstGame"));
-            events[0].Run();
+            foreach (var variaEvent in events)
+            {
+                variaEvent.Run();
+            }
         }
     }
 }
