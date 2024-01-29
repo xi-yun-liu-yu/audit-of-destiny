@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace News_Event
 {
@@ -206,6 +207,146 @@ namespace News_Event
                 BalanceOfPower.Instance.SetDflag2(true);
                 NewsListConroller.Instance.AddNews("阴谋分裂公会的内奸？","啊，有内鬼？！");
             }
+        }
+        
+        
+        // 随机事件区
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 随机事件区
+        
+        // 激进派事件区域
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 激进派事件区域
+
+        /// <summary>
+        /// 探险队侵吞公会战果
+        /// </summary>
+        public void Event_R_1()
+        {
+            int r = Random.Range(0, 9);
+            string content = " 最近有个探险队的队员突然变得出手阔绰。这与他的收入情况严重不符。经过核查，其所在的探险队最近上交的战利品数额出现了";
+            if (r <= 4)
+            {
+                content += "小幅";
+                BalanceOfPower.Instance.SetDifference("R",-0.05f);
+            }
+            else if (r <= 7 )
+            {
+                content += "一定程度的";
+                BalanceOfPower.Instance.SetDifference("R",-0.1f);
+            }
+            else if (r <= 9)
+            {
+                content += "严重的";
+                BalanceOfPower.Instance.SetDifference("R",-0.15f);
+            }
+            content += "下滑，公会对此事进行了严肃处理，最终使得该探险队集体侵吞战利品的行为得以曝光。据悉，激进派有人为此负责";
+            NewsListConroller.Instance.AddNews("探险队侵吞公会战果",content);
+        }
+
+        /// <summary>
+        /// 在邪神祭坛附件发现有其他探险队的踪迹
+        /// </summary>
+        public void Event_R_2()
+        {
+            BalanceOfPower.Instance.SetDifference("R",0.05f);
+            NewsListConroller.Instance.AddNews("在邪神祭坛附件发现有其他探险队的踪迹","据在邪神祭坛附件驻守的人员报告称，他们在巡逻时发现了一支陌生队伍经过的痕迹。目前还不知道是否有其他人已经发现了祭坛，但公会应当做好最坏的准备。");
+        }
+
+        /// <summary>
+        /// 与敌对公会的冲突
+        /// </summary>
+        public void Event_R_3()
+        {
+            int r = Random.Range(0, 1);
+            if (r==0)
+            {
+                BalanceOfPower.Instance.SetDifference("R",0.1f);
+                NewsListConroller.Instance.AddNews("与敌对公会的冲突","最近的一次探险行动中，我们的探险队碰上了另一只隶属敌对公会的探险队。双方为了一处营地的使用权大打出手。我方人员在冲突中展现了极高的作战素养，最终在给予敌方重大杀伤后胜利转进");
+            }
+            else
+            {
+                BalanceOfPower.Instance.SetDifference("R",0.15f);
+                NewsListConroller.Instance.AddNews("与敌对公会的冲突",
+                    "最近的一次探险行动中，我们的探险队碰上了另一只隶属敌对公会的探险队。双方为了一处营地的使用权大打出手。我方人员在冲突中展现了极高的作战素养，最终敌方人员仓皇逃离");
+            }
+        }
+
+        /// <summary>
+        /// 公会受到挑衅
+        /// </summary>
+        public void Event_R_4()
+        {
+            BalanceOfPower.Instance.SetDifference("R",0.05f);
+            NewsListConroller.Instance.AddNews("公会受到挑衅","由于公会的实力下降，近期不断有敌对公会的人在各种场合挑衅我们的人员，大家都对此感到气愤。");
+        }
+        
+        // 保守派事件
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // 保守派事件
+
+        /// <summary>
+        /// 帝国宗教裁判所处死邪神信徒
+        /// </summary>
+        public void Event_C_1()
+        {
+            BalanceOfPower.Instance.SetDifference("C",0.15f);
+            NewsListConroller.Instance.AddNews("帝国宗教裁判所处死邪神信徒","帝国宗教裁判所最近判决了一起利用邪神力量对抗教廷的案件。那些邪神信徒纠集了几千暴徒，试图摧毁当地的教堂，最终被赶来的帝国军队镇压。为首的那些狂热邪神信徒在判决后被当众处以火刑。");
+        }
+
+        /// <summary>
+        /// 祭祀典礼上的错误
+        /// </summary>
+        public void Event_C_2()
+        {
+            int r = Random.Range(0, 9);
+            string content = "在一次探险归来后，安葬与纪念牺牲的探险队员的祭祀仪式上，负责主持的大祭司将一名牺牲的探险队员的名字";
+            if (r <= 4)
+            {
+                content += "念错了。";
+                BalanceOfPower.Instance.SetDifference("C",-0.05f);
+            }
+            else if (r <= 7 )
+            {
+                content += "念成了另一位活着的队员的名字。";
+                BalanceOfPower.Instance.SetDifference("C",-0.1f);
+            }
+            else if (r <= 9)
+            {
+                content += "念成了一个侮辱性词汇";
+                BalanceOfPower.Instance.SetDifference("C",-0.15f);
+            }
+            content += "听闻此事的探险队员们大怒，对这名祭司展开了声势浩大的谴责。";
+            NewsListConroller.Instance.AddNews("祭祀典礼上的错误",content);
+        }
+
+        /// <summary>
+        /// 公会收到贵族资助
+        /// </summary>
+        public void Event_C_3()
+        {
+            BalanceOfPower.Instance.SetDifference("C",0.1f);
+            NewsListConroller.Instance.AddNews("公会收到贵族资助","公会近期的行动让一名贵族十分欣赏我们，他给我们送来了一批财宝，希望我们能够做大做强，成为他手中的一柄利剑。这笔雪中送炭的礼物大大缓解了公会的财政危机，对于祭坛的探索也显得不是那么紧迫了。");
+        }
+                
+        // 毁灭派事件
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // 毁灭派事件
+        
+        /// <summary>
+        /// 探险队成员与牧师发生暴力冲突
+        /// </summary>
+        public void Event_D_1()
+        {
+            int r = Random.Range(0, 9);
+            if (r<=7)
+            {
+                BalanceOfPower.Instance.SetDifference("D",0.1f);
+            }else
+            {
+                BalanceOfPower.Instance.SetDifference("D",0.2f);
+            }
+            
         }
         
     }

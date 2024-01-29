@@ -1515,9 +1515,9 @@ MonoBehaviour:
   R: {fileID: 3644303625838120966}
   C: {fileID: 5036448672170672497}
   D: {fileID: 3971251926170020431}
-  R_Value: 0.2
+  R_Value: 0.4
   C_Value: 0.6
-  D_Value: 0.2
+  D_Value: 0
 --- !u!1 &4020407884244794730
 GameObject:
   m_ObjectHideFlags: 0
