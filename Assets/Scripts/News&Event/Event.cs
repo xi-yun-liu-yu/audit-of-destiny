@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -57,9 +55,65 @@ namespace News_Event
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 自定义函数区域
         
+        // npc基础事件
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        // npc基础事件
+
+        /// <summary>
+        /// npc入会造成的影响
+        /// </summary>
+        /// <param name="npc">直接将npc实例化的对象丢进去</param>
+        public void Event_NPC_1(NPC.NPC npc)
+        {
+            switch (""+npc.getParty())
+            {
+                case "R":
+                    BalanceOfPower.Instance.SetDifference("R",npc.getPartyPowerWeight()*0.01f);
+                    Relationship.Instance.SetDifference("R",npc.getPartyPowerWeight()*5);
+                    break;
+                case "C":
+                    BalanceOfPower.Instance.SetDifference("C",npc.getPartyPowerWeight()*0.01f);
+                    Relationship.Instance.SetDifference("C",npc.getPartyPowerWeight()*5);
+                    break;
+                case "D":
+                    BalanceOfPower.Instance.SetDifference("D",npc.getPartyPowerWeight()*0.01f);
+                    Relationship.Instance.SetDifference("D",npc.getPartyPowerWeight()*5);
+                    break;
+                default:
+                    Debug.Log("Event_NPC:npc.getParty() Error");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 对npc施加影响后额外npc带来的其他影响
+        /// </summary>
+        /// <param name="npc">直接将npc实例化的对象丢进去</param>
+        public void Event_NPC_2(NPC.NPC npc)
+        {
+            
+        }
+        
         // 周期性、固定性函数区域
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         // 周期性、固定性函数区域
+
+        /// <summary>
+        /// 新游戏初始化
+        /// </summary>
+        public void Event_FirstGame()
+        {
+            NewspaperController.Instance.GenerateNewspapers();
+            NewsListConroller.Instance.AddNews("游戏背景","帝国历1145年5月14日，随着帝国对魔法森林探险活动的进行，越来越多的公会开始出现，由于容易探索的地方日渐稀少，各个公会的收入与资源开始迅速减少。此时的哈苏特公会迎来了一位年轻而富有领导力的新会长，尽管保守派的元老们都对新会长激进的行事风格感到担忧。但值此多事之秋，元老们都认识到，一个富有野心与能力的会长才能更好的带领哈苏特公会生存下去。\n\t在一次探险中，由会长带领的探险队发现了一处没有其他哈苏特公会涉足过的古神遗迹。由于资料的缺失，哈苏特公会中的牧师只能判断出这是某个邪神的远古祭坛。毫无疑问，遗迹中蕴含的力量无比强大，也拥有大量的财富，但获得这些的代价却不可预测，在短期内，没人有办法查清这个祭坛蕴含的危险。在元老大会上，保守派的元老们坚决反对在不清楚代价的情况下，贸然进入祭坛。年轻的会长却非常渴望获得力量。\n\t随着哈苏特公会经营情况的一步步恶化，会长与保守派元老的分歧也越来越大，会长变得越来越渴望远古祭坛中蕴含的财富与力量。哈苏特公会内的气氛日渐紧张。\n\t几周前，有一名新入会的弓手在随队执行委托任务时，没有伪装好，暴露了自己，导致了任务失败。这使得哈苏特公会损失了上万金币的酬劳（约等于哈苏特公会10个月的运转资金）。事后调查，此人在入会申请时的履历有夸大嫌疑。会长大怒，借机将主管入会审核的一位保守派元老逐出哈苏特公会。但在其余元老的极力反对之下，会长想让亲信主管入会审核的打算也落空了。最终经过了多次博弈，保守派元老与会长共同选择了你——一个毫无靠山、无功无过但在哈苏特公会成立之初就加入的文件管理员暂时进入元老院，主管入会审核。\n");
+            NewsListConroller.Instance.AddNews("游戏简介","你是哈苏特公会中新上任的入会审查主管，负责检查所有入会成员的资质。此时的哈苏特公会内部暗流涌动，派系斗争愈演愈烈。你需要这份工作养活家人，你当然可以兢兢业业的干好本职工作，庸碌一生。或许也可以利用好时局，在哈苏特公会的派系斗争中发挥意想不到的作用。");
+            NewsListConroller.Instance.AddNews("操作指引","这里是周报界面，所有的事件都会以新闻的方式呈现，注意某些特殊事件，他们会对权力平衡与派系关系做出影响");
+            NewsListConroller.Instance.AddNews("游戏方式","玩家审核NPC的入会申请，选择特定的人NPC加入公会，来暗中引导公会发展的同时为自己谋取更多的利益。");
+        }
+
+        public void Event_GenerateNewspaper()
+        {
+            NewspaperController.Instance.GenerateNewspapers();
+        }
         
         /// <summary>
         /// 周期性保存数据到player中
@@ -144,10 +198,7 @@ namespace News_Event
         /// </summary>
         public void Event_1()
         {
-            foreach (var npc in EventStream.Instance.ErrorNpcs)
-            {
-                
-            }
+            
         }
 
         /// <summary>
@@ -159,8 +210,12 @@ namespace News_Event
             int Rights = 0;//本周期拒绝的证件正确的人的数量
             foreach (var variabErrorNpc in EventStream.Instance.ErrorNpcs)
             {
-                // 未写完，等待NPC
-                Errors += 1;
+                int r = Random.Range(0, 9);
+                if (r==0)
+                {
+                    BalanceOfPower.Instance.SetDifference((""+variabErrorNpc.getParty()),variabErrorNpc.getPartyPowerWeight());
+                    Errors += 1;
+                }
             }
             foreach (var variabRightNpc in EventStream.Instance.RightNpcs)
             {
