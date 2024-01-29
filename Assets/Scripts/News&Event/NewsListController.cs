@@ -20,6 +20,8 @@ namespace News_Event
         [SerializeField]private GameObject Content;
 
         private List<(string,string)> NewsList=new List<(string, string)>();
+        public static NewsListConroller Instance{ get; private set; }
+        private void Awake() { Instance = this; }
     
         // 展示新闻列表中的所有新闻
         public void Display()
@@ -44,6 +46,12 @@ namespace News_Event
         public void test()
         {
             NewsList.Add(("标题","内容"));
+        }
+
+        public void AddNews(string title, string content)
+        {
+            Debug.Log(title);
+            NewsList.Add((title, content));
         }
         
     }

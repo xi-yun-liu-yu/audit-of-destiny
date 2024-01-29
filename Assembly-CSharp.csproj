@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\News&amp;Event\News.cs" />
      <Compile Include="Assets\Scripts\News&amp;Event\Relationship.cs" />
      <Compile Include="Assets\Scripts\News&amp;Event\EventStream.cs" />
+     <Compile Include="Assets\Scripts\Player\Player.cs" />
      <Compile Include="Assets\Scripts\System_Modules\PersistentSingleton.cs" />
      <Compile Include="Assets\Scripts\News&amp;Event\Money.cs" />
      <Compile Include="Assets\Scripts\System_Modules\Options.cs" />
@@ -74,6 +75,7 @@
      <Folder Include="Assets\Prefabs" />
      <Folder Include="Assets\Scripts\News&amp;Event" />
      <Folder Include="Assets\Scripts\Audio" />
+     <Folder Include="Assets\Scripts\Player" />
      <Reference Include="UnityEngine">
      <HintPath>W:\UnityHub\Unity\2022.3.15f1c1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>

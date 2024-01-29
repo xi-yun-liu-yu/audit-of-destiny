@@ -22,12 +22,17 @@ namespace News_Event
         private Text R_Information;
         private Text C_Information;
         private Text D_Information;
-        
-        private bool _dflag;//判断D是否启用
-        
-        public bool GetDflag() => _dflag;
 
-        public void SetDflag(bool value) => _dflag = value;
+        private bool _dflag1;//判断毁灭派是否登场
+        private bool _dflag2{ get; set; }//判断毁灭派是否亮明身份
+        
+        public bool GetDflag1() => _dflag1;
+
+        public void SetDflag1(bool value) => _dflag1 = value;
+        
+        public bool GetDflag2() => _dflag2;
+
+        public void SetDflag2(bool value) => _dflag2 = value;
 
         private bool _rIsLose{ get;  set; }
         private bool _cIsLose{ get;  set; }
@@ -55,7 +60,7 @@ namespace News_Event
             R_Information.text = "激进派：" + R_Value;
             C_Information.text = "保守派：" + C_Value;
             D_Information.text = "";
-            if (GetDflag())
+            if (GetDflag1())
             {
                 D_Information.text = "毁灭派：" + D_Value;
             }
@@ -82,7 +87,8 @@ namespace News_Event
         // difference 变化值 
         public void SetDifference(String faction, float difference)
         {
-            if (!GetDflag()||_dIsLose)
+            // 毁灭派未出现
+            if (!GetDflag1()||_dIsLose)
             {
                 switch (faction)
                 {
@@ -100,7 +106,7 @@ namespace News_Event
                 }
                 return;
             }
-            
+
             if (_rIsLose)
             {
                 switch (faction)
@@ -139,27 +145,51 @@ namespace News_Event
                 return;
             }
             
-            switch (faction)
+            if (GetDflag2())
             {
-                case "R":
-                    R_Value = R_Value + difference;
-                    C_Value = C_Value - (difference / 2);
-                    D_Value = D_Value - (difference / 2);
-                    break;
-                case "C":
-                    C_Value = C_Value + difference;
-                    R_Value = R_Value - (difference / 2);
-                    D_Value = D_Value - (difference / 2);
-                    break;
-                case "D":
-                    D_Value = D_Value + difference;
-                    R_Value = R_Value - (difference / 2);
-                    C_Value = C_Value - (difference / 2);
-                    break;
-                default:
-                    Debug.Log("faction 未使用约定的值");
-                    break;
+                // 毁灭派出现但未亮明身份
+                switch (faction)
+                {
+                    case "R":
+                        R_Value = R_Value + (difference / 2);
+                        C_Value = C_Value - difference ;
+                        D_Value = D_Value + (difference / 2);
+                        break;
+                    case "C":
+                        C_Value = C_Value + difference- (difference / 2/2);
+                        R_Value = R_Value - (difference / 2);
+                        D_Value = D_Value - (difference / 2/2);
+                        break;
+                    default:
+                        Debug.Log("faction 未使用约定的值");
+                        break;
+                }
             }
+            else
+            {
+                switch (faction)
+                            {
+                                case "R":
+                                    R_Value = R_Value + difference;
+                                    C_Value = C_Value - (difference / 2);
+                                    D_Value = D_Value - (difference / 2);
+                                    break;
+                                case "C":
+                                    C_Value = C_Value + difference;
+                                    R_Value = R_Value - (difference / 2);
+                                    D_Value = D_Value - (difference / 2);
+                                    break;
+                                case "D":
+                                    D_Value = D_Value + difference;
+                                    R_Value = R_Value - (difference / 2);
+                                    C_Value = C_Value - (difference / 2);
+                                    break;
+                                default:
+                                    Debug.Log("faction 未使用约定的值");
+                                    break;
+                            }
+            }
+            
 
             if (R_Value <= 0)
             {
@@ -177,7 +207,44 @@ namespace News_Event
             }
             
         }
-        
+        /// <summary>
+        /// 快速取值、赋值函数
+        /// </summary>
+        /// <param name="parameters">对象列表，依次是R_Value，C_Value，D_Value</param>
+        public void RenewFloutDate(object[] parameters)
+        {
+            R_Value = (float)parameters[0];
+            C_Value = (float)parameters[1];
+            D_Value = (float)parameters[2];
+        }
+        /// <summary>
+        /// 快速取值、赋值函数
+        /// </summary>
+        /// <param name="parameters">_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose</param>
+        public void RenewBoolDate(object[] parameters)
+        {
+            _dflag1 = (bool)parameters[0];
+            _dflag2 = (bool)parameters[1];
+            _rIsLose = (bool)parameters[2];
+            _cIsLose = (bool)parameters[3];
+            _dIsLose = (bool)parameters[4];
+        }
+        /// <summary>
+        /// 快速取值、赋值函数
+        /// </summary>
+        /// <param name="parameters">对象列表，依次是R_Value，C_Value，D_Value</param>
+        public object[] GetFloutDate()
+        {
+            return new object[]{R_Value,C_Value,D_Value};
+        }
+        /// <summary>
+        /// 快速取值、赋值函数
+        /// </summary>
+        /// <param name="parameters">_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose</param>
+        public object[] GetBoolDate()
+        {
+            return new object[]{_dflag1,_dflag2,_rIsLose,_rIsLose,_dIsLose};
+        }
         
     }
 }
