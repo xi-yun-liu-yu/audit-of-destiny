@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace News_Event
@@ -8,11 +9,18 @@ namespace News_Event
     public class Event
     {
         private String funName{ get;  set; }
+        private object[] parameters = null;
         
         // 初始执行事件
         public Event(string funName)
         {
             this.funName = funName;
+        }
+        
+        public Event(string funName,object[] parameters=null)
+        {
+            this.funName = funName;
+            this.parameters =parameters;
         }
 
         /// <summary>
@@ -30,7 +38,7 @@ namespace News_Event
                 throw new NullReferenceException("方法" + funName + "不存在");
             Event obj = new Event(funName);
             //执行方法
-            method.Invoke(obj, parameters);
+            method.Invoke(obj, this.parameters ?? parameters);
         }
         
         /// <summary>
@@ -48,7 +56,7 @@ namespace News_Event
                 throw new NullReferenceException("方法" + funName + "不存在");
             Event obj = new Event(funName);
             //执行方法
-            method.Invoke(obj, parameters);
+            method.Invoke(obj, this.parameters ?? parameters);
         }
         
         // 自定义函数区域
