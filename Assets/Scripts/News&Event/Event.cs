@@ -65,28 +65,32 @@ namespace News_Event
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
         public void Event_NPC_1(NPC.NPC npc)
         {
-            switch (""+npc.getParty())
-            {
-                case "R":
-                    BalanceOfPower.Instance.SetDifference("R",npc.getPartyPowerWeight()*0.01f);
-                    Relationship.Instance.SetDifference("R",npc.getPartyPowerWeight()*5);
-                    break;
-                case "C":
-                    BalanceOfPower.Instance.SetDifference("C",npc.getPartyPowerWeight()*0.01f);
-                    Relationship.Instance.SetDifference("C",npc.getPartyPowerWeight()*5);
-                    break;
-                case "D":
-                    BalanceOfPower.Instance.SetDifference("D",npc.getPartyPowerWeight()*0.01f);
-                    Relationship.Instance.SetDifference("D",npc.getPartyPowerWeight()*5);
-                    break;
-                default:
-                    Debug.Log("Event_NPC:npc.getParty() Error");
-                    break;
-            }
+                switch (""+npc.getParty())
+                {
+                    case "R":
+                        BalanceOfPower.Instance.SetDifference("R",npc.getPartyPowerWeight()*0.01f);
+                        Relationship.Instance.SetDifference("R",npc.getPartyPowerWeight()*5);
+                        break;
+                    case "C":
+                        BalanceOfPower.Instance.SetDifference("C",npc.getPartyPowerWeight()*0.01f);
+                        Relationship.Instance.SetDifference("C",npc.getPartyPowerWeight()*5);
+                        break;
+                    case "D":
+                        BalanceOfPower.Instance.SetDifference("D",npc.getPartyPowerWeight()*0.01f);
+                        Relationship.Instance.SetDifference("D",npc.getPartyPowerWeight()*5);
+                        break;
+                    default:
+                        Debug.Log("Event_NPC:npc.getParty() Error");
+                        break;
+                }
+                if (!npc.getIsCompliant()) // npc不合规进入,增加到错误npc列表
+                {
+                    EventStream.Instance.ErrorNpcs.Add(npc);
+                }
         }
 
         /// <summary>
-        /// 最终选择勒索NPC
+        /// 最终选择勒索NPC并执行入会影响
         /// </summary>
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
         public void Event_NPC_2(NPC.NPC npc)
@@ -102,35 +106,36 @@ namespace News_Event
                 EventStream.Instance.turnviolation += 2;
                 Player.Player.Instance.violation += 2;
             }
-            EventStream.Instance.ErrorNpcs.Add(npc);// 增加一个会暴雷的npc
+            Event_NPC_1(npc);//履行入会程序
         }
         
         
         /// <summary>
-        ///  错误拒绝了NPC
+        ///  拒绝了NPC
         /// </summary>
+        /// <param name="npc">直接将npc实例化的对象丢进去</param>
         public void Event_NPC_3(NPC.NPC npc)
         {
-            if (!npc.getIsCompliant() || npc.getIsPassed()) return;
-            switch (""+npc.getParty())
+            if (!npc.getIsCompliant()) return;
+            switch ("" + npc.getParty())
             {
                 case "R":
-                    Relationship.Instance.SetDifference("R",-6);
-                    Relationship.Instance.SetDifference("C",3);
-                    Relationship.Instance.SetDifference("D",3);
+                    Relationship.Instance.SetDifference("R", -6);
+                    Relationship.Instance.SetDifference("C", 3);
+                    Relationship.Instance.SetDifference("D", 3);
                     break;
                 case "C":
-                    Relationship.Instance.SetDifference("C",-6);
-                    Relationship.Instance.SetDifference("R",3);
-                    Relationship.Instance.SetDifference("D",3);
+                    Relationship.Instance.SetDifference("C", -6);
+                    Relationship.Instance.SetDifference("R", 3);
+                    Relationship.Instance.SetDifference("D", 3);
                     break;
                 case "D":
-                    Relationship.Instance.SetDifference("D",-6);
-                    Relationship.Instance.SetDifference("C",3);
-                    Relationship.Instance.SetDifference("R",3);
+                    Relationship.Instance.SetDifference("D", -6);
+                    Relationship.Instance.SetDifference("C", 3);
+                    Relationship.Instance.SetDifference("R", 3);
                     break;
             }
-
+            EventStream.Instance.RightNpcs.Add(npc);
             EventStream.Instance.turnviolation++;
             Player.Player.Instance.violation++;
         }
@@ -210,6 +215,7 @@ namespace News_Event
                     break;
             }
             Event_5();
+            Event_6();
         }
         
         // 激进派结局事件
@@ -342,6 +348,41 @@ namespace News_Event
             if (Player.Player.Instance.money<=0)
             {
                 NewsListConroller.Instance.AddNews("你破产了","资不抵债，成功负债上班");
+            }
+        }
+
+        /// <summary>
+        /// 看法过低导致开除
+        /// </summary>
+        public void Event_6()
+        {
+            if (Relationship.Instance.factionTag!=null)
+            {
+                switch (Relationship.Instance.factionTag)
+                {
+                    case "R":
+                        if (Relationship.Instance.R_Value <= 50) { NewsListConroller.Instance.AddNews("忠诚的不绝对，就是绝对的的不忠诚","你口口声声说要永远效忠于我们的利益，如今却背叛了会长大人的利益，我们将你永远驱逐出去"); }
+                        break;
+                    case "C":
+                        if (Relationship.Instance.C_Value <= 50) { NewsListConroller.Instance.AddNews("天无二日，教会不会怜悯叛徒","你口口声声说要永远效忠于我们的利益，如今却背叛了至高教会的利益，你将永远得不到救赎"); }
+                        break;
+                    case "D":
+                        if (Relationship.Instance.D_Value <= 50) { NewsListConroller.Instance.AddNews("新名单","叛教内务部：\n叛徒也要有叛徒的操守，新名单上的这几个不忠者一起清理掉吧。（你被清算了）"); }
+                        break;
+                }
+            }
+            else
+            {
+                int r = Random.Range(0, 99);
+                if (Relationship.Instance.R_Value > 30) return;
+                if (!(r <= BalanceOfPower.Instance.R_Value * 100)) return;
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
+                if (Relationship.Instance.C_Value > 30) return;
+                if (!(r <= BalanceOfPower.Instance.C_Value * 100)) return;
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
+                if (Relationship.Instance.D_Value > 30) return;
+                if (!(r <= BalanceOfPower.Instance.D_Value * 100)) return;
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
             }
         }
         

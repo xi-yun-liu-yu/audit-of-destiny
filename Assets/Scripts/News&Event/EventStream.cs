@@ -30,7 +30,9 @@ namespace News_Event
             Event e = new Event("Event_GenerateNewspaper");//创建一张空白的报纸等待数据
             e.Run();
             events.Add(new Event("Load"));
-            //等待npc事件
+            
+            EventStream.Instance.events.Add(new Event("Event_NPC_1"));// 例子： 玩家选择让npc进入
+            
             events.Add(new Event("Event_2"));
             if (Turn==4|| (Player.Player.Instance.B_R_Value <= 0.3f && Turn <= 4))
             {

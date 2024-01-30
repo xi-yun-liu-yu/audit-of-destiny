@@ -1371,7 +1371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Infromation: {fileID: 3947326115266300293}
   number: 0
-  costTime: 2
+  costTime: 1
   distance: 0
   angle: -90
   gameObject: {fileID: 6898990569966530583}
@@ -2557,7 +2557,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1074503472503424774
 MonoBehaviour:
   m_ObjectHideFlags: 0
