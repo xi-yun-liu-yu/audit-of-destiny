@@ -32,15 +32,17 @@ namespace News_Event
             events.Add(new Event("Load"));
             //等待npc事件
             events.Add(new Event("Event_2"));
-            if (Turn==4||BalanceOfPower.Instance.R_Value<=0.3f)
+            if (Turn==4|| (Player.Player.Instance.B_R_Value <= 0.3f && Turn <= 4))
             {
+                Debug.Log(BalanceOfPower.Instance.R_Value);
                 events.Add(new Event("Event_3"));//载入大清洗事件
             }
             events.Add(new Event("Event_4"));
             events.Add(new Event("Event_Random"));
             events.Add(new Event("Event_End"));
             events.Add(new Event("Save"));
-            
+            Turn++;
+
         }
 
         private void Awake()

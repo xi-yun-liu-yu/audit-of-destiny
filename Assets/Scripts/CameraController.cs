@@ -57,35 +57,35 @@ public class CameraController : MonoBehaviour
     //将居中视角
     public void MoveCenter()
     {
-        aimVector3 = new Vector3(0f, 0f, 0f);
+        aimVector3 = new Vector3(0f, 0f, -1f);
         b = true;
     }
 
     //将上移视角
     public void MoveUp()
     {
-        aimVector3 = new Vector3(0f, 1080f, 0f);
+        aimVector3 = new Vector3(0f, 1080f, -1f);
         b = true;
     }
 
     //将下移视角
     public void MoveDown()
     {
-        aimVector3 = new Vector3(0f, -1080f, 0f);
+        aimVector3 = new Vector3(0f, -1080f, -1f);
         b = true;
     }
 
     //将左移视角
     public void MoveLift()
     {
-        aimVector3 = new Vector3(-1920f, 0f, 0f);
+        aimVector3 = new Vector3(-1920f, 0f, -1f);
         b = true;
     }
 
     //将右移视角
     public void MoveRight()
     {
-        aimVector3 = new Vector3(1920f, 0f, 0f);
+        aimVector3 = new Vector3(1920f, 0f, -1f);
         b = true;
     }
 }

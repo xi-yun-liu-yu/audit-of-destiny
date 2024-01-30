@@ -95,6 +95,19 @@ public class Relationship : MonoBehaviour
             case "D": C_Value += C_Value >= THRESHOLD ? MAGNIFICATION * difference : difference;
                 break;
         }
+
+        if (R_Value>90)
+        {
+            factionTag = "R";
+        }
+        if (C_Value>90)
+        {
+            factionTag = "C";
+        }
+        if (D_Value>90)
+        {
+            factionTag = "D";
+        }
     }
     
     /// <summary>

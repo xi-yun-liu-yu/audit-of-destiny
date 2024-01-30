@@ -25,7 +25,7 @@ namespace Player
         [Range(0,100)]
         [SerializeField] public int R_D_Value;
         public string factionTag;//玩家立场
-         public int violation = 0;// 玩家违规次数
+        public int violation = 0;// 玩家违规次数
         public bool _rIsLose{ get;  set; }
         public bool _cIsLose{ get;  set; }
         public bool _dIsLose{ get;  set; }

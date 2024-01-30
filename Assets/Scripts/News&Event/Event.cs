@@ -187,22 +187,23 @@ namespace News_Event
         /// </summary>
         public void Event_End()
         {
+            Debug.Log(Relationship.Instance.factionTag+""+BalanceOfPower.Instance.C_Value);
             switch (Relationship.Instance.factionTag)
             {
                 case "R":
-                    if (BalanceOfPower.Instance.R_Value>=0.9)
+                    if (BalanceOfPower.Instance.R_Value>=0.9f)
                     {
                         Event_End_R();
                     }
                     break;
                 case "C":
-                    if (BalanceOfPower.Instance.C_Value>=0.9)
+                    if (BalanceOfPower.Instance.C_Value>=0.9f)
                     {
                         Event_End_C();
                     }
                     break;
                 case "D":
-                    if (BalanceOfPower.Instance.C_Value>=0.9)
+                    if (BalanceOfPower.Instance.D_Value>=0.9f)
                     {
                         Event_End_D();
                     }
@@ -305,7 +306,7 @@ namespace News_Event
         {
             BalanceOfPower.Instance.SetDifference("C",-(BalanceOfPower.Instance.C_Value/3));
             BalanceOfPower.Instance.SetDflag1(true);
-            BalanceOfPower.Instance.SetValue(BalanceOfPower.Instance.R_Value*0.75f,BalanceOfPower.Instance.C_Value,BalanceOfPower.Instance.R_Value*0.25f);
+            BalanceOfPower.Instance.SetValue(BalanceOfPower.Instance.R_Value*0.75f,BalanceOfPower.Instance.C_Value,BalanceOfPower.Instance.D_Value+BalanceOfPower.Instance.R_Value*0.25f);
             NewsListConroller.Instance.AddNews("大清洗","我去，是大清洗，太哈人了");
         }
 
@@ -314,7 +315,8 @@ namespace News_Event
         /// </summary>
         public void Event_4()
         {
-            if (BalanceOfPower.Instance.D_Value>=50&&!BalanceOfPower.Instance.GetDflag2())
+            Debug.Log(BalanceOfPower.Instance.D_Value);
+            if (BalanceOfPower.Instance.D_Value>=0.5f&&!BalanceOfPower.Instance.GetDflag2())
             {
                 BalanceOfPower.Instance.SetDflag2(true);
                 NewsListConroller.Instance.AddNews("阴谋分裂公会的内奸？","啊，有内鬼？！");
@@ -356,34 +358,34 @@ namespace News_Event
             {
                 // 0-3 激进派事件
                 case 0:
-                    Event_R_1();
+                    if (!BalanceOfPower.Instance._rIsLose) { Event_R_1(); }
                     break;
                 case 1:
-                    Event_R_2();
+                    if (!BalanceOfPower.Instance._rIsLose) Event_R_2();
                     break;
                 case 2:
-                    Event_R_3();
+                    if (!BalanceOfPower.Instance._rIsLose) Event_R_3();
                     break;
                 case 3:
-                    Event_R_4();
+                    if (!BalanceOfPower.Instance._rIsLose) Event_R_4();
                     break;
                 case 4:
-                    Event_C_1();
+                    if (!BalanceOfPower.Instance._cIsLose) Event_C_1();
                     break;
                 case 5:
-                    Event_C_2();
+                    if (!BalanceOfPower.Instance._cIsLose) Event_C_2();
                     break;
                 case 6:
-                    Event_C_3();
+                    if (!BalanceOfPower.Instance._cIsLose) Event_C_3();
                     break;
                 case 7:
-                    Event_C_2();
+                    if (!BalanceOfPower.Instance._cIsLose) Event_C_2();
                     break;
                 case 8:
-                    Event_D_1();
+                    if (!BalanceOfPower.Instance._dIsLose) Event_D_1();
                     break;
                 case 9:
-                    Event_D_2();
+                    if (!BalanceOfPower.Instance._dIsLose) Event_D_2();
                     break;
             }
         }

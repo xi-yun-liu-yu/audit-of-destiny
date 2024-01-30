@@ -33,9 +33,9 @@ namespace News_Event
 
         public void SetDflag2(bool value) => _dflag2 = value;
 
-        private bool _rIsLose{ get;  set; }
-        private bool _cIsLose{ get;  set; }
-        private bool _dIsLose{ get;  set; }
+        public bool _rIsLose{ get;  set; }
+        public bool _cIsLose{ get;  set; }
+        public bool _dIsLose{ get;  set; }
         
         private void Awake()
         {
@@ -202,11 +202,15 @@ namespace News_Event
                 C_Value = 0;
             }
 
-            if (D_Value <= 0)
+            if (GetDflag1())
             {
-                _dIsLose = true;
-                D_Value = 0;
+                if (D_Value <= 0)
+                {
+                    _dIsLose = true;
+                    D_Value = 0;
+                }
             }
+            
             
         }
         /// <summary>
