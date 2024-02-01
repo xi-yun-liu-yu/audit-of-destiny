@@ -32,8 +32,7 @@ public class dialogue : MonoBehaviour
     //是否直接输出（是否取消一字一字输出）
     bool cancelType = false;
 
-    [Header("三个回复选项的按钮")]
-    public GameObject button1, button2, button3;
+    public string talk;
 
     public static dialogue Instance { get; private set; }
 
@@ -41,17 +40,13 @@ public class dialogue : MonoBehaviour
     void Awake()
     {
         Instance = this;
-
-        button1.SetActive(false);
-        button2.SetActive(false);
-        button3.SetActive(false);
-
-        
+  
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        GetTextToList();
+        //将对话存入list
+        GetTextToList(talk);
     }
 
 
@@ -64,12 +59,6 @@ public class dialogue : MonoBehaviour
             if (index == textList.Count)//检测语句结束
             {
                 index = 0;
-
-                //激活三个按钮
-                button1.SetActive(true);
-                button2.SetActive(true);
-                button3.SetActive(true);
-
                 gameObject.SetActive(false);
                 return;
             }
@@ -88,24 +77,14 @@ public class dialogue : MonoBehaviour
     }
 
     //将文本按句子切割开分别存入list
-    void GetTextToList()
+    void GetTextToList(string talk)
     {
         //初始化列表及索引
         textList.Clear();
         index = 0;
-        int i = clickOn.Instance.index;
-        List<NPC.NPC> npcs = EventStream.Instance.npcs;
 
-        //添加角色文本到字符串数组中
-        string[] strings = new string[2];
-        strings[0] = npcs[i].getFirstTalk();
-        strings[1] = npcs[i].getSecondTalk();
-
-        //读入列表
-        foreach (var text in strings)
-        {
-            textList.Add(text);
-        }
+        textList.Add(talk);
+        
     }
 
     //一字一字输出一句文字

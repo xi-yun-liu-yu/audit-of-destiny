@@ -12,6 +12,12 @@ public class clickOn : MonoBehaviour
     [Header("npc索引")]
     public int index = 0;
 
+    [Header("对话框")]
+    public GameObject dialogBox;
+
+    [Header("三个回复选项的按钮")]
+    public GameObject button1, button2, button3;
+
     public static clickOn Instance { get; private set; }
 
     private void Awake()
@@ -24,48 +30,125 @@ public class clickOn : MonoBehaviour
     private void Start()
     {
         //刷新立绘
-        refreshImage();
+        //refreshImage();
     }
 
+    //友善
     public void ClickButton1()
     {
-        Debug.Log("点击了！");
+        //刷新npc数据
 
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getFirstTalk();
+
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
+
+        //激活对话框
+        dialogBox.SetActive(true);
+    }
+
+    //中立
+    public void ClickButton2()
+    {
+        //刷新npc数据
+
+        
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getFirstTalk();
+
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
+
+
+        //激活对话框
+        dialogBox.SetActive(true);
+    }
+
+    //敌对
+    public void ClickButton3()
+    {
+        //刷新npc数据
+
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getFirstTalk();
+
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
+
+        //激活对话框
+        dialogBox.SetActive(true);
+    }
+
+    public void ClickAccept()
+    {
         //载入事件
         //EventStream.Instance.events.Add(new Event("Event_NPC_1", new[] { eventStream.npcs[index] }));
 
-        //刷新npc数据
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getSecondTalk();
 
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
 
-        dialogue.Instance.button1.SetActive(false);
-        dialogue.Instance.button2.SetActive(false);
-        dialogue.Instance.button3.SetActive(false);
+        //激活对话框
+        dialogBox.SetActive(true);
     }
 
-    public void ClickButton2()
+    public void ClickRefuse()
     {
-        Debug.Log("点击了！");
-
-
-        dialogue.Instance.button1.SetActive(false);
-        dialogue.Instance.button2.SetActive(false);
-        dialogue.Instance.button3.SetActive(false);
-
         //载入事件
         //EventStream.Instance.events.Add(new Event("Event_NPC_2", new[] { eventStream.npcs[index] }));
+
+       
+
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getSecondTalk();
+
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
+
+        //激活对话框
+        dialogBox.SetActive(true);
     }
 
-    public void ClickButton3()
+    public void ClickBlackmail()
     {
-        Debug.Log("点击了！");
-
-
-        dialogue.Instance.button1.SetActive(false);
-        dialogue.Instance.button2.SetActive(false);
-        dialogue.Instance.button3.SetActive(false);
-
         //载入事件
         //EventStream.Instance.events.Add(new Event("Event_NPC_3", new[] { eventStream.npcs[index] }));
+
+        //将对话数据传入
+        int i = clickOn.Instance.index;
+        NPC.NPC npc = EventStream.Instance.npcs[i];
+        dialogue.Instance.talk = npc.getSecondTalk();
+
+        //关闭按钮
+        button1.SetActive(false);
+        button2.SetActive(false);
+        button3.SetActive(false);
+
+        //激活对话框
+        dialogBox.SetActive(true);
     }
 
     public void changeNpc()
@@ -86,6 +169,7 @@ public class clickOn : MonoBehaviour
         string path = EventStream.Instance.npcs[index].getPicture();
         image.sprite = Resources.Load(path, typeof(Sprite)) as Sprite;
     }
+
 
     public void Exit()
     {
