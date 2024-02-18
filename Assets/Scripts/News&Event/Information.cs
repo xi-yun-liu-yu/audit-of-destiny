@@ -26,8 +26,8 @@ public class Information : MonoBehaviour
     public Transform OpenTransform { get; set; }
     public GameObject gameObject;
     
-    public bool isMoving;
-    public bool isFolded;
+    public bool isMoving=false;
+    public bool isFolded=false;
     
 
     public void ToPrevious()
@@ -57,20 +57,20 @@ public class Information : MonoBehaviour
             float dTime = Time.deltaTime;
             if (isFolded)
             {
-                
                gameObject.transform.Rotate(Vector3.forward * dTime*acceleration);
                 gameObject.transform.position=Vector3.MoveTowards(gameObject.transform.position, OpenTransform.position, velocity *dTime);
+
             }
 
             if (!isFolded)
             {
                 gameObject.transform.Rotate(Vector3.forward *dTime *(-acceleration));
                 gameObject.transform.position=Vector3.MoveTowards(gameObject.transform.position, FoldTransform.position, velocity *dTime);
-
             }
             if(OpenTransform.position==gameObject.transform.position||FoldTransform.position==gameObject.transform.position)
             {
                 isMoving =! isMoving;
+                isFolded = !isFolded;
             }
         }
         

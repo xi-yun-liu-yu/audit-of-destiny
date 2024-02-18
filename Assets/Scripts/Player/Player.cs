@@ -10,11 +10,11 @@ namespace Player
         [SerializeField] public int money;
         [Header("权力平衡存档区")]
         [Range(0,1)]
-        [SerializeField] public float B_R_Value;
+        [SerializeField] public double B_R_Value;
         [Range(0,1)]
-        [SerializeField] public float B_C_Value;
+        [SerializeField] public double B_C_Value;
         [Range(0,1)]
-        [SerializeField] public float B_D_Value;
+        [SerializeField] public double B_D_Value;
         public bool _dflag1;//判断毁灭派是否登场
         public bool _dflag2; //判断毁灭派是否亮明身份
         [Header("关系存档区")]
@@ -59,9 +59,9 @@ namespace Player
         /// <param name="parameters">对象列表，依次是B_R_Value，B_C_Value，B_D_Value</param>
         public void RenewB_FloutDate(object[] parameters)
         {
-            B_R_Value = (float)parameters[0];
-            B_C_Value = (float)parameters[1];
-            B_D_Value = (float)parameters[2];
+            B_R_Value = (double)parameters[0];
+            B_C_Value = (double)parameters[1];
+            B_D_Value = (double)parameters[2];
         }
         /// <summary>
         /// 快速取值、赋值函数

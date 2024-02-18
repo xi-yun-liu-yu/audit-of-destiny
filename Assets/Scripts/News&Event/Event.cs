@@ -1,6 +1,6 @@
 ﻿using System;
+using atp;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace News_Event
@@ -51,7 +51,6 @@ namespace News_Event
         {
             var type = typeof(Event);
             var method = type.GetMethod(funName);
-            Debug.Log(method == null);
             if (method == null)
                 throw new NullReferenceException("方法" + funName + "不存在");
             Event obj = new Event(funName);
@@ -71,26 +70,27 @@ namespace News_Event
         /// npc入会造成的影响
         /// </summary>
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
-        public void Event_NPC_1(NPC.NPC npc)
+        public void Event_NPC_1(atp.NpcTemplate npc)
         {
                 switch (""+npc.getParty())
                 {
                     case "R":
                         BalanceOfPower.Instance.SetDifference("R",npc.getPartyPowerWeight()*0.01f);
-                        Relationship.Instance.SetDifference("R",npc.getPartyPowerWeight()*5);
+                        Relationship.Instance.SetDifference("R",(int)npc.getPartyPowerWeight()*5);
                         break;
                     case "C":
                         BalanceOfPower.Instance.SetDifference("C",npc.getPartyPowerWeight()*0.01f);
-                        Relationship.Instance.SetDifference("C",npc.getPartyPowerWeight()*5);
+                        Relationship.Instance.SetDifference("C",(int)npc.getPartyPowerWeight()*5);
                         break;
                     case "D":
                         BalanceOfPower.Instance.SetDifference("D",npc.getPartyPowerWeight()*0.01f);
-                        Relationship.Instance.SetDifference("D",npc.getPartyPowerWeight()*5);
+                        Relationship.Instance.SetDifference("D",(int)npc.getPartyPowerWeight()*5);
                         break;
                     default:
                         Debug.Log("Event_NPC:npc.getParty() Error");
                         break;
                 }
+                Debug.Log(npc.getParty()+" "+npc.getPartyPowerWeight());
                 if (!npc.getIsCompliant()) // npc不合规进入,增加到错误npc列表
                 {
                     EventStream.Instance.ErrorNpcs.Add(npc);
@@ -101,7 +101,7 @@ namespace News_Event
         /// 最终选择勒索NPC并执行入会影响
         /// </summary>
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
-        public void Event_NPC_2(NPC.NPC npc)
+        public void Event_NPC_2(NpcTemplate npc)
         {
             if (npc.getWillPay())
             {
@@ -110,7 +110,7 @@ namespace News_Event
 
             if (npc.getWillReport())
             {
-                Relationship.Instance.SetDifference(""+npc.getParty(),-npc.getPartyPowerWeight()*5);
+                Relationship.Instance.SetDifference(""+npc.getParty(),-(int)npc.getPartyPowerWeight()*5);
                 EventStream.Instance.turnviolation += 2;
                 Player.Player.Instance.violation += 2;
             }
@@ -122,7 +122,7 @@ namespace News_Event
         ///  拒绝了NPC
         /// </summary>
         /// <param name="npc">直接将npc实例化的对象丢进去</param>
-        public void Event_NPC_3(NPC.NPC npc)
+        public void Event_NPC_3(NpcTemplate npc)
         {
             if (!npc.getIsCompliant()) return;
             switch ("" + npc.getParty())
@@ -222,6 +222,11 @@ namespace News_Event
                     }
                     break;
             }
+
+            if (EventStream.Instance.Turn>=10)
+            {
+                Event_End_N();
+            }
             Event_5();
             Event_6();
         }
@@ -230,25 +235,28 @@ namespace News_Event
         public void Event_End_R()
         {
             NewsListConroller.Instance.AddNews("邪神之祭","经过残酷的政治斗争后获得了绝对的权力，他兴致勃勃的带领着自己最狂热的支持者进入祭坛，获得了令人恐惧的力量。随着时间的推移，祭坛中蕴含的邪恶力量开始波及整个帝国。这些力量逐渐失控，带来了一系列灾难性的后果。魔法森林变得异常不稳定，导致了大规模的自然灾害和生态破坏。许多城镇和村庄受到了毁灭性的打击，数以万计的人们丧生。帝国的经济也受到了严重的影响。饥荒与叛乱接踵而至，整个帝国陷入了混乱和动荡之中。");
-
+            GameObject.Find("End").GetComponent<end>().GameObject.GetComponent<结尾>().激进派结局();
         }
         
         //保守派结结局事件
         private void Event_End_C()
         {
             NewsListConroller.Instance.AddNews("至高教权","保守派的元老们依靠老练的政治手腕成功将会长逼出了权力中心，会长在意识到自己失败后便黯然离去，投靠了另一个与哈苏特公会敌对的公会。很快，那个公会就派人占领了祭坛获得了其中的邪恶力量。在会长的胁迫下，作为其在哈苏特公会失败的主要推手的你被元老们抛弃，交给了会长。会长将你关在地窖里终日折磨，而你的妻女被卖到了奴隶市场，下落不明。最终你在痛苦中死亡。");
+            GameObject.Find("结尾").GetComponent<结尾>().保守派结局();
         }
         
         // 毁灭派结局事件
         private void Event_End_D()
         {
             NewsListConroller.Instance.AddNews("分崩离析", "在毁灭派的挑拨离间下，激进派与保守派的矛盾终于无法隐藏，全公会上下都被派系斗争所割裂。毁灭派利用未暴露的人员不断的出卖公会利益去打击反对派。在一次元老会议上，会长与大祭司当场决裂，双方大打出手。公会高层伤亡惨重，会长被毒杀，双方控制的探险队也在火并中遭受重创。随后大祭司带着所有的神职人员和支持他们的探险队出逃，而群龙无首的激进派则一哄而散，各奔前程。作为内奸的你和毁灭派诸人前往敌对公会希望得到庇护。结果在被细节完财物后，你们被关进了敌对公会的矿井中当苦工。曾许诺你们荣华富贵的敌对公会联络人表示，没有人喜欢叛徒，哪怕是背叛敌人的人。你在矿井中得知妻子为了活命，带着女儿改嫁给了隔壁老王，而你也在不久之后的一次塌方中被活埋。");
+            GameObject.Find("结尾").GetComponent<结尾>().毁灭派结局();
         }
         
         // 平庸结局
         private void Event_End_N()
         {
             NewsListConroller.Instance.AddNews("平平淡淡打工人","会在长久的政治斗争之后，各派直接达成了微妙的平衡，使得哈苏特公会得以平稳的运行下去。由于在这场斗争中你并未发挥什么作用，你很快就被边缘化，重新回到档案室管理文件，最后在一次裁员中被开除。身无所长的你找不到工作，一家人流落街头冻饿而死。");
+            GameObject.Find("结尾").GetComponent<结尾>().平淡结局();
         }
 
         /// <summary>
@@ -273,6 +281,8 @@ namespace News_Event
                 {
                     BalanceOfPower.Instance.SetDifference((""+variabErrorNpc.getParty()),1.5f*variabErrorNpc.getPartyPowerWeight());
                     Errors += 1;
+                    EventStream.Instance.turnviolation += 2;
+                    Player.Player.Instance.violation += 2;
                     switch (""+variabErrorNpc.getParty())
                     {
                         case "R":
@@ -299,8 +309,9 @@ namespace News_Event
             if (Errors>0)
             {
                 str += "本周发生了" + Errors + "起事故，经组织查明是由不称职者混入了组织，有人会为此付出代价的。";
-                str += "/n";
+                str += "\n";
                 Money.Instance.saving -= (Errors * 200);
+                
             }
 
             if (Rights>0)
@@ -329,7 +340,6 @@ namespace News_Event
         /// </summary>
         public void Event_4()
         {
-            Debug.Log(BalanceOfPower.Instance.D_Value);
             if (BalanceOfPower.Instance.D_Value>=0.5f&&!BalanceOfPower.Instance.GetDflag2())
             {
                 BalanceOfPower.Instance.SetDflag2(true);
@@ -346,16 +356,19 @@ namespace News_Event
             if (EventStream.Instance.turnviolation>=5)
             {
                 NewsListConroller.Instance.AddNews("你被开除了","这段时间内你的工作纰漏很多，滚吧");
+                GameObject.Find("结尾").GetComponent<结尾>().平淡结局();
             }
 
             if (Player.Player.Instance.violation>=20)
             {
                 NewsListConroller.Instance.AddNews("你被开除了","长期以来你的工作纰漏很多，滚吧");
+                GameObject.Find("结尾").GetComponent<结尾>().平淡结局();
             }
 
             if (Player.Player.Instance.money<=0)
             {
                 NewsListConroller.Instance.AddNews("你破产了","资不抵债，成功负债上班");
+                GameObject.Find("结尾").GetComponent<结尾>().平淡结局();
             }
         }
 
@@ -369,13 +382,13 @@ namespace News_Event
                 switch (Relationship.Instance.factionTag)
                 {
                     case "R":
-                        if (Relationship.Instance.R_Value <= 50) { NewsListConroller.Instance.AddNews("忠诚的不绝对，就是绝对的的不忠诚","你口口声声说要永远效忠于我们的利益，如今却背叛了会长大人的利益，我们将你永远驱逐出去"); }
+                        if (Relationship.Instance.R_Value <= 50) { NewsListConroller.Instance.AddNews("忠诚的不绝对，就是绝对的的不忠诚","你口口声声说要永远效忠于我们的利益，如今却背叛了会长大人的利益，我们将你永远驱逐出去"); GameObject.Find("结尾").GetComponent<结尾>().平淡结局();}
                         break;
                     case "C":
-                        if (Relationship.Instance.C_Value <= 50) { NewsListConroller.Instance.AddNews("天无二日，教会不会怜悯叛徒","你口口声声说要永远效忠于我们的利益，如今却背叛了至高教会的利益，你将永远得不到救赎"); }
+                        if (Relationship.Instance.C_Value <= 50) { NewsListConroller.Instance.AddNews("天无二日，教会不会怜悯叛徒","你口口声声说要永远效忠于我们的利益，如今却背叛了至高教会的利益，你将永远得不到救赎"); GameObject.Find("结尾").GetComponent<结尾>().平淡结局();}
                         break;
                     case "D":
-                        if (Relationship.Instance.D_Value <= 50) { NewsListConroller.Instance.AddNews("新名单","叛教内务部：\n叛徒也要有叛徒的操守，新名单上的这几个不忠者一起清理掉吧。（你被清算了）"); }
+                        if (Relationship.Instance.D_Value <= 50) { NewsListConroller.Instance.AddNews("新名单","叛教内务部：\n叛徒也要有叛徒的操守，新名单上的这几个不忠者一起清理掉吧。（你被清算了）");GameObject.Find("结尾").GetComponent<结尾>().平淡结局(); }
                         break;
                 }
             }
@@ -384,13 +397,13 @@ namespace News_Event
                 int r = Random.Range(0, 99);
                 if (Relationship.Instance.R_Value > 30) return;
                 if (!(r <= BalanceOfPower.Instance.R_Value * 100)) return;
-                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头");GameObject.Find("结尾").GetComponent<结尾>().平淡结局(); }
                 if (Relationship.Instance.C_Value > 30) return;
                 if (!(r <= BalanceOfPower.Instance.C_Value * 100)) return;
-                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头");GameObject.Find("结尾").GetComponent<结尾>().平淡结局(); }
                 if (Relationship.Instance.D_Value > 30) return;
                 if (!(r <= BalanceOfPower.Instance.D_Value * 100)) return;
-                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); }
+                { NewsListConroller.Instance.AddNews("眼中钉","你被当权者视为眼中钉，以左脚迈入大门为由被开除了，从此流落街头"); GameObject.Find("结尾").GetComponent<结尾>().平淡结局();}
             }
         }
         

@@ -19,7 +19,7 @@ public class Annulus : MaskableGraphic
     public float innerRadius = 10;//圆环内径，为0即是圆
     public float outerRadius = 20;//圆环外径
     
-    [Range(0, 1)] [SerializeField] float m_fillAmount;//填充值
+    [Range(0, 1)] [SerializeField] double m_fillAmount;//填充值
     
     [Range(0, 720)] public int segments = 360;//片数，越大锯齿越不明显
  
@@ -31,7 +31,7 @@ public class Annulus : MaskableGraphic
  
     float m_originRadian = -1;//根据m_originType设置相关弧度（-1表示还没设置过对应的值）
     
-    public float fillAmount
+    public double fillAmount
     {
         get => m_fillAmount;
         set

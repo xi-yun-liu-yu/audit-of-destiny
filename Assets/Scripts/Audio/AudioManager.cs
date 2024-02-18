@@ -34,7 +34,7 @@ namespace Audio
         public void SetMusicVolume(Slider slider)
         {
             musicVolume = slider.value;
-            musicPlayer.volume = musicVolume;
+            musicPlayer.volume = sFXVolume;
         }
 
 
@@ -50,7 +50,7 @@ namespace Audio
         // 默认播放第一条UI音效
         public void PlaySFX()
         {
-            sFXPlayer.PlayOneShot(audioMusicClips[0], sFXVolume);
+            sFXPlayer.PlayOneShot(audioSFXClips[0], sFXVolume);
         }
 
         // index 索引
@@ -58,15 +58,15 @@ namespace Audio
         // 播放第index条UI音效
         public void PlaySFX(int index)
         {
-            sFXPlayer.PlayOneShot(audioMusicClips[index - 1], sFXVolume);
+            sFXPlayer.PlayOneShot(audioSFXClips[index - 1], sFXVolume);
         }
 
         // volume 音量
         // 随机播放UI音效
         public void PlayRandomSFX()
         {
-            int index = Random.Range(0, audioMusicClips.Count);
-            sFXPlayer.PlayOneShot(audioMusicClips[index], sFXVolume);
+            int index = Random.Range(0, audioSFXClips.Count);
+            sFXPlayer.PlayOneShot(audioSFXClips[index], sFXVolume);
         }
 
 

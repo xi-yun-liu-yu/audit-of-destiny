@@ -13,11 +13,11 @@ namespace News_Event
         [SerializeField] private GameObject D;
         [Space(5)] 
         [Range(0,1)]
-        [SerializeField] public float R_Value;
+        [SerializeField] public double R_Value;
         [Range(0,1)]
-        [SerializeField] public float C_Value;
+        [SerializeField] public double C_Value;
         [Range(0,1)]
-        [SerializeField] public float D_Value;
+        [SerializeField] public double D_Value;
         private Text R_Information;
         private Text C_Information;
         private Text D_Information;
@@ -56,17 +56,17 @@ namespace News_Event
             C.GetComponent<Annulus>().fillAmount = 1 - R_Value;
             D.GetComponent<Annulus>().fillAmount = 1 - R_Value - C_Value;
             
-            R_Information.text = "激进派：" + R_Value;
-            C_Information.text = "保守派：" + C_Value;
+            R_Information.text = "激进派：" + Math.Round(R_Value, 3)*100+"%";
+            C_Information.text = "保守派：" + Math.Round(C_Value, 3)*100+"%";
             D_Information.text = "";
             if (GetDflag1())
             {
-                D_Information.text = "毁灭派：" + D_Value;
+                D_Information.text = "毁灭派：" + Math.Round(D_Value, 3)*100+"%";
             }
         }
 
         // 用于初始化数值
-        public void SetValue(float R_Value, float C_Value, float D_Value)
+        public void SetValue(double R_Value, double C_Value, double D_Value)
         {
             this.R_Value = R_Value;
             this.C_Value = C_Value;
@@ -75,7 +75,7 @@ namespace News_Event
         
         // 用于输入变化值
         // ！！！请自己保证 值的和 等于零！！！
-        public void SetDifference(float R_Difference, float C_Difference, float D_Difference)
+        public void SetDifference(double R_Difference, double C_Difference, double D_Difference)
         {
             R_Value = R_Value + R_Difference;
             C_Value = C_Value + C_Difference;
@@ -84,7 +84,7 @@ namespace News_Event
 
         // faction 派系简写 激进派-R，保守派-C，毁灭派-D
         // difference 变化值 
-        public void SetDifference(String faction, float difference)
+        public void SetDifference(String faction, double difference)
         {
             // 毁灭派未出现
             if (!GetDflag1()||_dIsLose)
@@ -219,9 +219,9 @@ namespace News_Event
         /// <param name="parameters">对象列表，依次是R_Value，C_Value，D_Value</param>
         public void RenewFloutDate(object[] parameters)
         {
-            R_Value = (float)parameters[0];
-            C_Value = (float)parameters[1];
-            D_Value = (float)parameters[2];
+            R_Value = (double)parameters[0];
+            C_Value = (double)parameters[1];
+            D_Value = (double)parameters[2];
         }
         /// <summary>
         /// 快速取值、赋值函数

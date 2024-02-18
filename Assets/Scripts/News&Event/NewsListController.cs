@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace News_Event
-{
+{ 
     public class NewsListConroller : MonoBehaviour
     {
         [Header("新闻的尺寸")]
@@ -50,7 +50,6 @@ namespace News_Event
 
         public void AddNews(string title, string content)
         {
-            Debug.Log(title);
             NewsList.Add((title, content));
         }
         

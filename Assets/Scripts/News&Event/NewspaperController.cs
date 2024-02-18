@@ -14,6 +14,8 @@ namespace News_Event
         public static NewspaperController Instance{ get; private set; }
         public GameObject t1;// 周报折叠时候的位置
         public GameObject t2;// 周报展开时候的位置
+
+        public static bool isShow;
         
         
         private void Awake()
@@ -31,15 +33,21 @@ namespace News_Event
             clone.SetActive(false);
             clone.SetActive(true);
             newspaperList.Add(clone);
-            DisplayAll();// 赞美万机之神！
+            DisplayAll();// 赞美万机之神
             FoldAll();// 赞美欧姆弥撒亚!
+           
+            
         }
         public void ToPrevious()
         {
-            if (index==0) return;
+            if (index == 0) return;
             index -= 1;
             newspaperList[index].GetComponent<Newspaper>().Information.GetComponent<Information>().isFolded = false;
             newspaperList[index].GetComponent<Newspaper>().Information.GetComponent<Information>().isMoving = true;
+            if (index==0)
+            {
+                isShow = false;
+            }
         }
 
         public void ToNext()
@@ -56,8 +64,10 @@ namespace News_Event
             {
                 newspaper.GetComponent<Newspaper>().Information.GetComponent<Information>().ToNext();
             }
-
+            
             index = newspaperList.Count();
+            isShow = true;
+            
         }
         public void FoldAll()
         {
@@ -67,6 +77,19 @@ namespace News_Event
             }
 
             index = 0;
+            isShow = false;
+        }
+
+        public void Click()
+        {
+            if (isShow)
+            {
+                FoldAll();
+            }
+            else
+            {
+                DisplayAll();
+            }
         }
     }
 }

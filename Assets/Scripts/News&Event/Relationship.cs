@@ -22,9 +22,9 @@ public class Relationship : MonoBehaviour
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
     [Space(5)] [Range(0, 100)] [SerializeField]
-    private int THRESHOLD;//阈值
+    private int THRESHOLD=80;//阈值
     [Range(0, 100)] [SerializeField]
-    private int MAGNIFICATION;//倍率
+    private int MAGNIFICATION=3;//倍率
     /// <summary>
     /// ///////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
@@ -59,8 +59,8 @@ public class Relationship : MonoBehaviour
     // 重绘好感度条状图
     public void RenewRelationship()
     {
-        R.GetComponent<Slider>().value = R_Value;
-        C.GetComponent<Slider>().value = C_Value;
+        R.GetComponent<Slider>().value = (float)R_Value;
+        C.GetComponent<Slider>().value = (float)C_Value;
         D.GetComponent<Slider>().value = 0;
         R_Information.text = "激进派态度：" + R_Value;
         C_Information.text = "保守派态度：" + C_Value;
@@ -68,7 +68,7 @@ public class Relationship : MonoBehaviour
         if (GetDflag())
         {
             D_Information.text = "毁灭派态度：" + D_Value;
-            D.GetComponent<Slider>().value = D_Value;
+            D.GetComponent<Slider>().value = (float)D_Value;
         }
     }
     
@@ -83,28 +83,53 @@ public class Relationship : MonoBehaviour
     // 设置变化值
     // faction 派系简写 激进派-R，保守派-C，毁灭派-D
     // difference 变化值 
-    public void SetDifference(String faction, int difference)
+    public void SetDifference(string faction, int difference)
     {
         switch (faction)
         {
             case "R":
-                R_Value += R_Value >= THRESHOLD ? MAGNIFICATION * difference : difference;
+                if (R_Value>=THRESHOLD)
+                {
+                    R_Value += MAGNIFICATION * difference;
+                }
+                else
+                {
+                    R_Value += difference;
+                }
                 break;
-            case "C": C_Value += C_Value >= THRESHOLD ? MAGNIFICATION * difference : difference;
+            case "C": 
+                if (C_Value>=THRESHOLD)
+                {
+                    C_Value += MAGNIFICATION * difference;
+                }
+                else
+                {
+                    C_Value += difference;
+                }
                 break;
-            case "D": C_Value += C_Value >= THRESHOLD ? MAGNIFICATION * difference : difference;
+            case "D": if (D_Value>=THRESHOLD)
+                {
+                    D_Value += MAGNIFICATION * difference;
+                }
+                else
+                {
+                    D_Value += difference;
+                }
+                break;
+            default:
+                Debug.Log("Error");
                 break;
         }
 
-        if (R_Value>90)
+        if (R_Value>80)
         {
             factionTag = "R";
         }
-        if (C_Value>90)
+        if (C_Value>80)
         {
             factionTag = "C";
         }
-        if (D_Value>90)
+        if (D_Value>80)
         {
             factionTag = "D";
         }

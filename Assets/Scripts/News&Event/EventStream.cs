@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
+using atp;
 using Unity.VisualScripting;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using 溪云;
 
 namespace News_Event
 {
     public class EventStream:MonoBehaviour
     {
-        public List<NPC.NPC> npcs= new List<NPC.NPC>();//NPC列表
+        public List<NpcTemplate> npcs= new List<NpcTemplate>();//NPC列表
         public List<Event> events=new List<Event>();
-        public List<NPC.NPC> ErrorNpcs = new List<NPC.NPC>();//存在的有风险npc暴雷的数量
-        public List<NPC.NPC> RightNpcs = new List<NPC.NPC>();//本周期拒绝的证件正确的人的数量
+        public List<NpcTemplate> ErrorNpcs = new List<NpcTemplate>();//存在的有风险npc暴雷的数量
+        public List<NpcTemplate> RightNpcs = new List<NpcTemplate>();//本周期拒绝的证件正确的人的数量
         public int Turn=0;//周期数
         public int index;
         public int turnviolation = 0;//单周期违规次数
@@ -25,18 +26,14 @@ namespace News_Event
         {
             turnviolation = 0;
             npcs.Clear();
-            npcs.Add(new NPC.NPC());//随机添加一定数量的NPC
+           // npcs = 总控制器.Instance.npc生成();
             events.Clear();
             RightNpcs.Clear();
             Event e = new Event("Event_GenerateNewspaper");//创建一张空白的报纸等待数据
             e.Run();
             events.Add(new Event("Load"));
-
-            var npc=new NPC.NPC();
-            npc.setWillPay(true);
-            npc.setWillReport(false);
-            npc.setIsCompliant(true);
-            events.Add(new Event("Event_NPC_3",new []{npc}));// 例子： 玩家选择让npc进入
+            
+            EventStream.Instance.events.Add(new Event("Event_NPC_1",new []{npcs[1]}));// 例子： 玩家选择让npc进入
             
             events.Add(new Event("Event_2"));
             if (Turn==4|| (Player.Player.Instance.B_R_Value <= 0.3f && Turn <= 4))
@@ -49,7 +46,32 @@ namespace News_Event
             events.Add(new Event("Event_End"));
             events.Add(new Event("Save"));
             Turn++;
+        }
 
+        public void TrunStart()
+        {
+            turnviolation = 0;
+            npcs = 总控制器.Instance.npcs;
+            events.Clear();
+            RightNpcs.Clear();
+            Event e = new Event("Event_GenerateNewspaper");//创建一张空白的报纸等待数据
+            e.Run();
+            events.Add(new Event("Load"));
+        }
+
+        public void TrunEnd()
+        {
+            events.Add(new Event("Event_2"));
+            if (Turn==4|| (Player.Player.Instance.B_R_Value <= 0.3f && Turn <= 4))
+            {
+                Debug.Log(BalanceOfPower.Instance.R_Value);
+                events.Add(new Event("Event_3"));//载入大清洗事件
+            }
+            events.Add(new Event("Event_4"));
+            events.Add(new Event("Event_Random"));
+            events.Add(new Event("Event_End"));
+            events.Add(new Event("Save"));
+            Turn++;
         }
 
         private void Awake()
